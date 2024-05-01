@@ -33,7 +33,7 @@ export default {
   computed: {
     // 联机
     URL() {
-      let URL = axios.defaults.baseURL + "/" + this.chapterInfo.thumbs;
+      let URL = axios.defaults.baseURL + this.chapterInfo.cover;
       return URL;
     },
     // 单机

@@ -46,6 +46,9 @@ export default {
           console.log(response);
           that.detail = response.data;
           that.chapters = response.data.chapters;
+          // that.chapters.forEach((c) => {
+          //   c.seriesName =  that.info.portraitImagePath.
+          // });
           console.log("success");
         },
         function (err) {
