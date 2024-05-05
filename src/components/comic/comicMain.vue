@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="list">
-      <div class="comic-tabs" v-for="p in staticPages" :key="p.id">
+      <div class="comic-tabs" v-for="p in pages" :key="p.id">
         <page-tab :page="p"></page-tab>
       </div>
     </div>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 import pageTab from "./pageTab.vue";
 export default {
   components: { pageTab },
@@ -52,25 +52,29 @@ export default {
   },
   created() {
     this.getPages();
+    console.log(this.chapterInfo);
+
   },
-  props: {},
+  props: {
+    chapterInfo: Object
+  },
   computed: {
     // 联机
   },
   methods: {
     getPages() {
       // 联机
-      // var that = this;
-      // axios.get("/home/" + this.chapter.id).then(
-      //   function (response) {
-      //     console.log(response);
-      //     that.pages = response.data.pages;
-      //     console.log("success");
-      //   },
-      //   function (err) {
-      //     console.log(err);
-      //   }
-      // );
+      var that = this;
+      axios.get("/admin/chapter/" + that.chapterInfo.id).then(
+        function (response) {
+          console.log(response);
+          that.pages = response.data.pages;
+          console.log(that.pages);
+        },
+        function (err) {
+          console.log(err);
+        }
+      );
     },
   },
 };

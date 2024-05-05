@@ -1,6 +1,8 @@
 <template>
   <div class="header">
-    <i class="el-icon-back" @click="getBack"></i>
+
+      <i class="el-icon-back" @click="getBack"></i>
+    
   </div>
 </template>
 
@@ -8,6 +10,7 @@
 export default {
   methods: {
     getBack() {
+      window.history.back(-1);
       window.history.back(-1);
     },
   },

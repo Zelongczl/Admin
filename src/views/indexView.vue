@@ -27,7 +27,7 @@
           />
           <label for="upload" class="">
             <div class="trigger">
-              <img src="" alt="" ref="preview" class="preview" />
+              <img src="" alt="" ref="preview" class="preview" @load="adaptation"/>
             </div>
           </label>
           <input
@@ -40,12 +40,13 @@
             accept="image/*"
           />
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+            <el-button @click="dialogFormVisible = false;reset()">Cancel</el-button>
             <el-button
               type="primary"
               @click="
                 dialogFormVisible = false;
                 onSubmit();
+                reset()
               "
               >Confirm</el-button
             >
@@ -104,6 +105,22 @@ export default {
           }
         );
     },
+    adaptation() {
+      const img = this.$refs.preview
+      if(img.naturalHeight > img.naturalWidth) {
+        img.style.height = "100%"
+        img.style.width = "auto"
+      } else {
+        img.style.width = "100%"
+        img.style.height = "auto"
+      }
+    },
+    reset() {
+      this.$refs.preview.src = ""
+      this.$refs.selected.value = ""
+      this.form.Title = ""
+      this.form.Description = ""
+    }
   },
 };
 </script>
@@ -161,13 +178,10 @@ export default {
 }
 .trigger {
   width: 100%;
-  height: 150px;
+  height: 300px;
   border-radius: 10px;
   border: 1px solid #aaa;
   display: inline-block;
-}
-.preview {
-  width: 200px;
 }
 .dialog-footer {
   margin-top: -50px;
@@ -178,5 +192,6 @@ input[name="Description"] {
   width: 100%;
   margin-bottom: 30px;
   height: 30px;
+  border: 1px solid #aaa;
 }
 </style>

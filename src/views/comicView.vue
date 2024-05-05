@@ -2,29 +2,21 @@
   <div>
     <comic-header></comic-header>
 
-    <comic-main></comic-main>
+    <comic-main :chapterInfo="this.$route.query.chapterInfo" ref="main"></comic-main>
 
     <!-- create series -->
     <i class="el-icon-plus add" @click="dialogFormVisible = true"></i>
 
     <!-- create form -->
     <el-dialog :visible.sync="dialogFormVisible" class="dialog">
-      <p>Create Series</p>
-      <input placeholder="Title" name="Title" v-model="form.Title" />
-      <input
-        v-model="form.Description"
-        name="Description"
-        placeholder="Description"
-        type="textarea"
-        rows="5"
-      />
+      <p>Add Pages</p>
       <label for="upload" class="">
         <div class="trigger">
-          <img src="" alt="" ref="preview" class="preview" />
+          <img src="" alt="" ref="preview" class="preview" @load="adaptation"/>
         </div>
       </label>
       <input
-        name="CoverImage"
+        name="PageImage"
         type="file"
         id="upload"
         style="display: none"
@@ -33,12 +25,13 @@
         accept="image/*"
       />
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button @click="dialogFormVisible = false;reset()">Cancel</el-button>
         <el-button
           type="primary"
           @click="
             dialogFormVisible = false;
             onSubmit();
+            reset()
           "
           >Confirm</el-button
         >
@@ -54,15 +47,18 @@ import axios from "axios";
 export default {
   data() {
     return {
+      chapterInfo: {},
       dialogTableVisible: false,
       dialogFormVisible: false,
       form: {
-        Title: "",
-        Description: "",
-        CoverImage: "",
+        Id: "",
+        PageImage: "",
       },
       formLabelWidth: "120px",
     };
+  },
+  create() {
+    this.chapterInfo = this.$route.query.chapterInfo;
   },
   components: {
     comicMain,
@@ -75,28 +71,41 @@ export default {
       console.log("111");
 
       this.$refs.preview.src = URL.createObjectURL(newFile[0]);
-      this.form.CoverImage = newFile[0];
+      this.form.PageImage = newFile[0];
       // this.uploadFilesByOSS2(File);
     },
     onSubmit() {
       let formData = new FormData();
-      formData.append("Title", this.form.Title);
-      formData.append("Description", this.form.Description);
-      formData.append("CoverImage", this.form.CoverImage);
+      formData.append("Id", this.$route.query.chapterInfo.id);
+      formData.append("PageImage", this.form.PageImage);
       axios
-        .post("/admin/series/addSeries", formData, {
+        .post("/admin/pages/addPages", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then(
           (res) => {
             console.log(res);
-            this.$refs.mainList.getAll();
+            this.$refs.main.getPages();
           },
           (err) => {
             console.log(err);
           }
         );
     },
+    adaptation() {
+      const img = this.$refs.preview
+      if(img.naturalHeight > img.naturalWidth) {
+        img.style.height = "100%"
+        img.style.width = "auto"
+      } else {
+        img.style.width = "100%"
+        img.style.height = "auto"
+      }
+    },
+    reset() {
+      this.$refs.preview.src = ""
+      this.$refs.selected.value = ""
+    }
   },
 };
 </script>
@@ -126,13 +135,15 @@ export default {
 }
 .trigger {
   width: 100%;
-  height: 150px;
+  height: 500px;
   border-radius: 10px;
   border: 1px solid #aaa;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .preview {
-  width: 200px;
+  object-fit: cover;
 }
 .dialog-footer {
   margin-top: -50px;

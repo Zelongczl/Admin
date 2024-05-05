@@ -1,22 +1,17 @@
 <template>
   <div class="chapter-tab">
-    <!-- <router-link
+    <router-link
+      class="router-link"
       :to="{
-        name: '/',
-        query: {
-          comicname: comicsName,
-          comicDef: comicDef,
-          comicChap: comicChap,
-          info: info,
-          rightList: rightList,
-          comicID: comicID,
-        },
+        name: 'comic',
+        query:{
+          chapterInfo: chapterInfo
+        }
       }"
-    > -->
-    <img :src="URL" alt="" class="coverimg" />
-    <i>{{ chapterInfo.title }}</i>
-    <!-- <i class="el-icon-more icon"></i> -->
-    <!-- </router-link> -->
+    >
+      <img :src="URL" alt="" class="coverimg" />
+      <i>{{ chapterInfo.title }}</i>
+    </router-link>
   </div>
 </template>
 
@@ -54,6 +49,11 @@ export default {
   display: flex;
   align-items: center;
   border-radius: 10px;
+}
+
+.chapter-tab .router-link {
+  display: flex;
+  align-items: center;
 }
 
 .chapter-tab:hover {

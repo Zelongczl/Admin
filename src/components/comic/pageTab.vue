@@ -1,12 +1,12 @@
 <template>
   <div class="comic-tab">
-    <img :src="URL" alt="" class="coverimg" />
-    <i>{{ page.name }}</i>
+    <img :src="URL" alt="" class="coverimg" ref="preview" @load="adaptation"/>
+    <!-- <i>{{ page.name }}</i> -->
   </div>
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 export default {
   components: {},
   props: {
@@ -17,15 +17,27 @@ export default {
   },
   computed: {
     // 联机
-    // URL() {
-    //   let URL = axios.defaults.baseURL + this.page.url;
-    //   return URL;
-    // },
-    // 单机
     URL() {
-      return this.page.url;
+      let URL = axios.defaults.baseURL + '/comics/' +this.page.image;
+      return URL;
     },
+    // 单机
+    // URL() {
+    //   return this.page.url;
+    // },
   },
+  methods: {
+    adaptation() {
+      const img = this.$refs.preview
+      if(img.naturalHeight > img.naturalWidth) {
+        img.style.height = "100%"
+        img.style.width = "auto"
+      } else {
+        img.style.width = "100%"
+        img.style.height = "auto"
+      }
+    },
+  }
 };
 </script>
 
@@ -37,6 +49,9 @@ export default {
   background-color: #77787b;
   height: 300px;
   border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .comic-tab i {
   position: absolute;
@@ -47,7 +62,7 @@ export default {
 }
 .comic-tab .coverimg {
   /* height: 95%; */
-  height: 300px;
+  /* height: 300px;  */
   /* display: inline-block; */
   filter: brightness(0.6);
 }
